@@ -1,204 +1,94 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>处决仪式结果模拟</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .chart-container {
-            position: relative;
-            height: 400px;
-            width: 100%;
-            margin: 20px 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nxersty的奇思妙想</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #f9f9f9, #e0e7ff);
+      color: #1a1a1a;
+    }
+    header {
+      background-color: #4f46e5;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    .content {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #4f46e5;
+      padding-left: 0.5rem;
+    }
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    .card a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: #4f46e5;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .card a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.875rem;
+      color: #888;
+      padding: 2rem 0;
+    }
+  </style>
 </head>
-<body class="bg-gray-50">
-    <div class="container">
-        <h1 class="text-3xl font-bold text-center mb-8">投票模拟器</h1>
-        
-        <div class="mb-6">
-            <label class="block mb-2">
-                模拟次数：
-                <input type="number" id="simulationCount" value="1000" min="100" max="10000"
-                    class="ml-2 p-1 border rounded">
-            </label>
-            <button id="runSimulation" 
-                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                运行模拟
-            </button>
-        </div>
+<body>
 
-        <div class="chart-container">
-            <canvas id="resultChart"></canvas>
-        </div>
+  <header>
+    <h1>Nxersty的奇思妙想</h1>
+    <p>脑洞无限，乐趣无穷😋</p>
+  </header>
 
-        <div id="results" class="mt-6 space-y-2"></div>
+  <div class="content">
+    <div class="section-title">🧠 今天又有什么新点子？</div>
 
-        <div class="mt-8 p-4 bg-gray-100 rounded">
-            <h3 class="text-lg font-bold mb-2">模拟假设说明：</h3>
-            <ul class="list-disc pl-6 space-y-1">
-                <li>一个人必定投杏子</li>
-                <li>每个人有50%的概率认为忠佑是凶手</li>
-                <li>愿意牺牲寿命处决忠佑的概率为30%</li>
-                <li>认为霜月是凶手的人，80%会投霜月，20%会投杏子</li>
-                <li>认为忠佑是凶手但不愿牺牲寿命的人，60%会投霜月，40%会投杏子</li>
-                <li>如果出现平票情况，不会处决任何人</li>
-            </ul>
-        </div>
+    <div class="card">
+      <h2>死亡回响处决仪式投票模拟</h2>
+      <p>一个合格的杠精要用真实数据讲话！杠到最后娱乐性已经大于对真相的渴望🤣</p>
+      <a href="vote.html">点击进入 &raquo;</a>
     </div>
 
-    <script>
-        let chart = null;
+    <!-- 你可以继续添加更多奇思妙想卡片 -->
 
-        function runSimulation(simulationCount) {
-            const outcomes = {
-                "忠佑": 0,
-                "霜月": 0,
-                "杏子": 0,
-                "无人被处决": 0
-            };
+  </div>
 
-            for (let i = 0; i < simulationCount; i++) {
-                // 一个人一定投杏子
-                let votes = ["杏子"];
-                
-                // 其余6个人的投票
-                for (let j = 0; j < 6; j++) {
-                    const believesChongYouGuilty = Math.random() < 0.5;
-                    const willingToSacrifice = Math.random() < 0.3;
+  <footer>
+    © 2025 Nxersty 所有奇思妙想保留脑洞版权🧐
+  </footer>
 
-                    if (believesChongYouGuilty) {
-                        if (willingToSacrifice) {
-                            votes.push("忠佑");
-                        } else {
-                            votes.push(Math.random() < 0.6 ? "霜月" : "杏子");
-                        }
-                    } else {
-                        votes.push(Math.random() < 0.8 ? "霜月" : "杏子");
-                    }
-                }
-
-                const voteCounts = {
-                    "忠佑": votes.filter(v => v === "忠佑").length,
-                    "霜月": votes.filter(v => v === "霜月").length,
-                    "杏子": votes.filter(v => v === "杏子").length
-                };
-
-                const maxVotes = Math.max(...Object.values(voteCounts));
-                const maxVoteNames = Object.keys(voteCounts).filter(k => voteCounts[k] === maxVotes);
-
-                // 如果多个选项得票相同，则无人被处决
-                if (maxVoteNames.length > 1) {
-                    outcomes["无人被处决"]++;
-                } else {
-                    outcomes[maxVoteNames[0]]++;
-                }
-            }
-
-            return Object.entries(outcomes).map(([name, count]) => ({
-                name,
-                percentage: (count / simulationCount * 100).toFixed(2)
-            }));
-        }
-
-        function updateChart(results) {
-            const ctx = document.getElementById('resultChart').getContext('2d');
-            
-            if (chart) {
-                chart.destroy();
-            }
-
-            chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: results.map(r => r.name),
-                    datasets: [{
-                        label: '概率 (%)',
-                        data: results.map(r => parseFloat(r.percentage)),
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(75, 192, 192, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            title: {
-                                display: true,
-                                text: '概率 (%)'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: '投票结果概率分布'
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateResults(results) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '<h3 class="text-xl font-bold mb-2">模拟结果分析：</h3>';
-            const ul = document.createElement('ul');
-            ul.className = 'list-disc pl-6';
-            
-            results.forEach(result => {
-                const li = document.createElement('li');
-                if (result.name === "无人被处决") {
-                    li.textContent = `出现平票导致${result.name}的概率：${result.percentage}%`;
-                } else {
-                    li.textContent = `${result.name}被处决的概率：${result.percentage}%`;
-                }
-                ul.appendChild(li);
-            });
-            
-            resultsDiv.appendChild(ul);
-        }
-
-        document.getElementById('runSimulation').addEventListener('click', () => {
-            const simulationCount = parseInt(document.getElementById('simulationCount').value);
-            const results = runSimulation(simulationCount);
-            updateChart(results);
-            updateResults(results);
-        });
-
-        // 初始运行一次
-        window.addEventListener('load', () => {
-            const simulationCount = parseInt(document.getElementById('simulationCount').value);
-            const results = runSimulation(simulationCount);
-            updateChart(results);
-            updateResults(results);
-        });
-    </script>
 </body>
 </html>
