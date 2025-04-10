@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>硬盘打地鼠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: white; /* 纯白背景 */
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background: #4f46e5; /* 按钮背景颜色 */
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin: 0 10px; /* 增加按钮之间的间距 */
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    #timer {
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+
+    #progress-bar {
+      width: 100%;
+      height: 10px;
+      background-color: #4f46e5; /* 初始背景颜色为紫色 */
+      margin-top: 5px;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    #progress {
+      height: 100%;
+      background: white; /* 进度条的背景为白色 */
+      width: 100%; /* 初始宽度为 100% */
+      transform-origin: right; /* 设置变换的起点为右侧 */
+      transform: scaleX(0); /* 初始缩放为 0 */
+      transition: transform 1s linear; /* 宽度变化的动画效果 */
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .drive {
+      background: linear-gradient(135deg, #f9f9f9, #e6e6e6);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100px; /* 固定高度 */
+    }
+
+    .drive:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(135deg, #e6f7ff, #d9f0ff);
+    }
+
+    .drive-icon {
+      font-size: 2rem;
+      color: #0078d7;
+      margin-bottom: 5px;
+    }
+
+    .drive-label {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .file {
+      font-size: 14px;
+      margin-top: 5px;
+      padding: 4px;
+      border-radius: 4px;
+      height: 20px;
+      visibility: hidden;
+      background: #f0f0f0;
+      color: #333;
+      text-align: center;
+      line-height: 20px;
+    }
+
+    .file.visible {
+      visibility: visible;
+    }
+
+    .real {
+      background-color: #d4fcdc;
+      color: green;
+      font-weight: bold;
+    }
+
+    .fake {
+      background-color: #d4fcdc;
+      color: green;
+      font-weight: bold;
+    }
+
+    .invaded {
+      background-color: #ffe5e5 !important;
+      color: #c00 !important;
+      font-weight: bold;
+    }
+
+    #result {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    #rules {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    .difficulty-box {
+      width: 120px;
+      height: 60px;
+      background: linear-gradient(135deg, #0078d7, #005a9e);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .difficulty-box:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .difficulty-box.easy {
+      background: linear-gradient(135deg, #4caf50, #388e3c);
+    }
+
+    .difficulty-box.medium {
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+    }
+
+    .difficulty-box.hard {
+      background: linear-gradient(135deg, #f44336, #d32f2f);
+    }
+
+    .difficulty-box.hell {
+      background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🖥️ 硬盘打地鼠</h1>
+  <div id="controls">
+    <button onclick="showRules()">游戏规则</button>
+    <button onclick="selectDifficulty()">选择难度</button>
+    <div id="timer">倒计时：20秒</div>
+    <div id="progress-bar"><div id="progress"></div></div>
+  </div>
+
+  <div id="difficulty-selection" style="display: none; text-align: center; margin-bottom: 20px;">
+    <h2>选择难度</h2>
+    <div style="display: flex; justify-content: center; gap: 20px;">
+      <div class="difficulty-box easy" onclick="setDifficulty('easy')">简单</div>
+      <div class="difficulty-box medium" onclick="setDifficulty('medium')">中等</div>
+      <div class="difficulty-box hard" onclick="setDifficulty('hard')">困难</div>
+      <div class="difficulty-box hell" onclick="setDifficulty('hell')">地狱</div>
+    </div>
+  </div>
+
+  <div id="grid"></div>
+
+  <div id="result"></div>
+
+  <script>
+    const grid = document.getElementById("grid");
+    const timerEl = document.getElementById("timer");
+    const resultEl = document.getElementById("result");
+    const progress = document.getElementById("progress");
+
+    let realMole = null;
+    let fakeMoles = [];
+    let countdown = 20;
+    let interval = null;
+    let gameOver = false;
+    let difficulty = "easy"; // 默认难度
+    let roundCount = 0; // 轮次计数
+
+    function showRules() {
+      alert("游戏规则：\n1. 点击硬盘查看是否有地鼠文件。\n2. 右键点击硬盘打地鼠。\n3. 根据难度选择，假地鼠数量和时间不同。\n\n难度说明：\n简单：3-5个假地鼠，20秒\n中等：6-7个假地鼠，20秒\n困难：10个假地鼠，20秒\n地狱：动态真地鼠，15个假地鼠，8秒");
+    }
+
+    function selectDifficulty() {
+      document.getElementById("difficulty-selection").style.display = "block";
+      document.getElementById("controls").style.display = "none";
+    }
+
+    function setDifficulty(selectedDifficulty) {
+      difficulty = selectedDifficulty;
+      document.getElementById("difficulty-selection").style.display = "none";
+      document.getElementById("controls").style.display = "block";
+      startGame();
+    }
+
+    function generateDrives() {
+      grid.innerHTML = "";
+      for (let i = 0; i < 24; i++) {
+        const driveLetter = String.fromCharCode(67 + i); // C-Z
+        const drive = document.createElement("div");
+        drive.className = "drive";
+        drive.dataset.letter = driveLetter;
+        drive.innerHTML = `
+          <div class="drive-icon">💾</div>
+          <div class="drive-label">${driveLetter}:</div>
+          <div class="file">（空）</div>
+        `;
+        drive.oncontextmenu = (e) => {
+          e.preventDefault();
+          handleClick(drive, true); // 右键打地鼠
+        };
+        drive.onclick = () => handleClick(drive, false); // 左键查看文件
+        grid.appendChild(drive);
+      }
+    }
+
+    function startGame() {
+      gameOver = false;
+      resultEl.textContent = "";
+      clearInterval(interval);
+
+      // 根据难度设置参数
+      if (difficulty === "easy") {
+        countdown = 20;
+        fakeCount = Math.floor(Math.random() * 3) + 3; // 3-5个假地鼠
+      } else if (difficulty === "medium") {
+        countdown = 20;
+        fakeCount = Math.floor(Math.random() * 2) + 6; // 6-7个假地鼠
+      } else if (difficulty === "hard") {
+        countdown = 20;
+        fakeCount = 10; // 10个假地鼠
+      } else if (difficulty === "hell") {
+        countdown = 8;
+        fakeCount = 15; // 15个假地鼠
+      }
+
+      timerEl.textContent = `倒计时：${countdown}秒`;
+      progress.style.transform = "scaleX(0)"; // 初始化进度条为 0
+      generateDrives();
+
+      const drives = document.querySelectorAll(".drive");
+      realMole = drives[Math.floor(Math.random() * drives.length)];
+      const realFile = realMole.querySelector(".file");
+      realFile.textContent = "🟢 mole.exe"; // 真地鼠文件名
+      realFile.classList.add("real");
+      realMole.dataset.type = "real";
+
+      fakeMoles = [];
+      const fakeNames = [
+        "mo1e.exe",
+        "m0le.exe",
+        "mol3.exe",
+        "mole.eee",
+        "m01e.exe",
+        "Mole.exe",
+        "mOle.exe",
+        "male.exe",
+        "mele.exe"
+      ]; // 假地鼠文件名列表
+
+      while (fakeMoles.length < fakeCount) {
+        const candidate = drives[Math.floor(Math.random() * drives.length)];
+        if (candidate !== realMole && !fakeMoles.includes(candidate)) {
+          const file = candidate.querySelector(".file");
+          file.textContent = "🟢 " + fakeNames[Math.floor(Math.random() * fakeNames.length)];
+          file.classList.add("fake");
+          candidate.dataset.type = "fake";
+          fakeMoles.push(candidate);
+        }
+      }
+
+      interval = setInterval(() => {
+        countdown--;
+        timerEl.textContent = `倒计时：${countdown}秒`;
+        progress.style.transform = `scaleX(${(20 - countdown) / 20})`; // 根据时间调整缩放比例
+        if (countdown <= 0) {
+          endGame(false);
+        }
+      }, 1000);
+    }
+
+    function handleClick(drive, isRightClick) {
+      if (gameOver) return;
+
+      const file = drive.querySelector(".file");
+      if (!isRightClick) {
+        file.classList.add("visible"); // 左键显示文件
+      } else {
+        const type = drive.dataset.type;
+        if (type === "real") {
+          clearInterval(interval);
+          gameOver = true;
+          roundCount++; // 成功后增加轮次计数
+          resultEl.textContent = `🎯 成功打到了地鼠！进入第 ${roundCount + 1} 轮！`;
+          setTimeout(startGame, 2000); // 2秒后开始下一轮
+        } else if (type === "fake") {
+          endGame(false);
+        }
+      }
+    }
+
+    function endGame(success) {
+      clearInterval(interval);
+      gameOver = true;
+
+      if (!success) {
+        document.querySelectorAll(".drive").forEach(d => {
+          const file = d.querySelector(".file");
+          file.textContent = "💣 mole.exe";
+          file.classList.add("visible"); // 显示所有文件
+          file.classList.remove("real", "fake");
+          file.classList.add("invaded");
+        });
+        resultEl.textContent = `⚠️ 地鼠侵占了你的电脑！你坚持了 ${roundCount} 轮进攻！`;
+      }
+    }
+
+    // 初始加载
+    generateDrives();
+  </script>
+</body>
+</html>
