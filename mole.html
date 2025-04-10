@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>硬盘打地鼠</title>
+  <title>电脑保卫战</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -11,6 +11,7 @@
       color: #333;
       margin: 0;
       padding: 20px;
+      padding-bottom: 50px; /* 增加底部内边距，避免内容被遮挡 */
     }
 
     h1 {
@@ -71,8 +72,8 @@
 
     #grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(6, 1fr); /* 每行 6 个硬盘 */
+      gap: 15px;
       max-width: 800px;
       margin: 0 auto;
     }
@@ -81,7 +82,7 @@
       background: linear-gradient(135deg, #f9f9f9, #e6e6e6);
       border: 1px solid #ccc;
       border-radius: 4px;
-      padding: 10px;
+      padding: 5px; /* 减少内边距 */
       text-align: center;
       cursor: pointer;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -91,7 +92,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100px; /* 固定高度 */
+      height: 80px; /* 缩小高度 */
+      width: 100px; /* 固定宽度 */
     }
 
     .drive:hover {
@@ -101,28 +103,28 @@
     }
 
     .drive-icon {
-      font-size: 2rem;
+      font-size: 1.5rem; /* 缩小图标 */
       color: #0078d7;
-      margin-bottom: 5px;
+      margin-bottom: 3px; /* 减少间距 */
     }
 
     .drive-label {
-      font-size: 1rem;
+      font-size: 0.9rem; /* 缩小字体 */
       font-weight: bold;
       color: #333;
     }
 
     .file {
-      font-size: 14px;
-      margin-top: 5px;
-      padding: 4px;
+      font-size: 12px; /* 缩小字体 */
+      margin-top: 3px; /* 减少间距 */
+      padding: 2px; /* 减少内边距 */
       border-radius: 4px;
-      height: 20px;
+      height: 16px; /* 缩小高度 */
       visibility: hidden;
       background: #f0f0f0;
       color: #333;
       text-align: center;
-      line-height: 20px;
+      line-height: 16px; /* 调整行高 */
     }
 
     .file.visible {
@@ -149,7 +151,7 @@
 
     #result {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 10px; /* 减少顶部外边距，整体向上移动 */
       font-size: 1.5rem;
       font-weight: bold;
       animation: fadeIn 1s ease-in-out;
@@ -210,11 +212,11 @@
 </head>
 <body>
 
-  <h1>🖥️ 硬盘打地鼠</h1>
+  <h1>💻 守护你的电脑</h1>
   <div id="controls">
     <button onclick="showRules()">游戏规则</button>
     <button onclick="selectDifficulty()">选择难度</button>
-    <div id="timer">倒计时：20秒</div>
+    <div id="timer">倒计时：??秒</div>
     <div id="progress-bar"><div id="progress"></div></div>
   </div>
 
@@ -247,9 +249,9 @@
     let roundCount = 0; // 轮次计数
 
     function showRules() {
-      alert("游戏规则：\n1. 点击硬盘查看是否有地鼠文件。\n2. 右键点击硬盘打地鼠。\n3. 根据难度选择，假地鼠数量和时间不同。\n\n难度说明：\n简单：3-5个假地鼠，20秒\n中等：6-7个假地鼠，20秒\n困难：10个假地鼠，20秒\n地狱：动态真地鼠，15个假地鼠，8秒");
+      alert("游戏规则：\n1. 地鼠即将来袭！左键点击硬盘，查看是否有地鼠正在尝试攻击该区域。\n2. 小心虚假地鼠！地鼠会散播侦察兵，转移你的注意力。\n3. 把地鼠赶出去！找出地鼠真正想侵占的硬盘，右键驱逐它们离开电脑。\n\n难度说明：\n简单：3-5个地鼠，20秒攻下电脑\n中等：6-9个地鼠，15秒攻下电脑\n困难：10个地鼠，10秒攻下电脑\n地狱：地鼠会打游击战了！15个地鼠，8秒攻下电脑");
     }
-
+    
     function selectDifficulty() {
       document.getElementById("difficulty-selection").style.display = "block";
       document.getElementById("controls").style.display = "none";
@@ -289,17 +291,22 @@
       clearInterval(interval);
 
       // 根据难度设置参数
+      let totalTime; // 定义总时间变量
       if (difficulty === "easy") {
         countdown = 20;
+        totalTime = 20; // 简单模式总时间
         fakeCount = Math.floor(Math.random() * 3) + 3; // 3-5个假地鼠
       } else if (difficulty === "medium") {
-        countdown = 20;
-        fakeCount = Math.floor(Math.random() * 2) + 6; // 6-7个假地鼠
+        countdown = 15;
+        totalTime = 15; // 中等模式总时间
+        fakeCount = Math.floor(Math.random() * 4) + 6; // 6-9个假地鼠
       } else if (difficulty === "hard") {
-        countdown = 20;
+        countdown = 10;
+        totalTime = 10; // 困难模式总时间
         fakeCount = 10; // 10个假地鼠
       } else if (difficulty === "hell") {
         countdown = 8;
+        totalTime = 8; // 地狱模式总时间
         fakeCount = 15; // 15个假地鼠
       }
 
@@ -341,7 +348,7 @@
       interval = setInterval(() => {
         countdown--;
         timerEl.textContent = `倒计时：${countdown}秒`;
-        progress.style.transform = `scaleX(${(20 - countdown) / 20})`; // 根据时间调整缩放比例
+        progress.style.transform = `scaleX(${(totalTime - countdown) / totalTime})`; // 根据时间调整缩放比例
         if (countdown <= 0) {
           endGame(false);
         }
@@ -360,7 +367,7 @@
           clearInterval(interval);
           gameOver = true;
           roundCount++; // 成功后增加轮次计数
-          resultEl.textContent = `🎯 成功打到了地鼠！进入第 ${roundCount + 1} 轮！`;
+          resultEl.textContent = `🎯 成功驱逐了地鼠！进入第 ${roundCount + 1} 轮进攻！`;
           setTimeout(startGame, 2000); // 2秒后开始下一轮
         } else if (type === "fake") {
           endGame(false);
