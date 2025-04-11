@@ -208,6 +208,37 @@
     .difficulty-box.hell {
       background: linear-gradient(135deg, #9c27b0, #7b1fa2);
     }
+
+    /* 手机端适配 */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem; /* 缩小标题字体 */
+      }
+
+      #grid {
+        grid-template-columns: repeat(3, 1fr); /* 每行 3 个硬盘 */
+        gap: 10px; /* 减少间距 */
+      }
+
+      .drive {
+        height: 60px; /* 缩小高度 */
+        width: 80px; /* 缩小宽度 */
+      }
+
+      .drive-icon {
+        font-size: 1.2rem; /* 缩小图标 */
+      }
+
+      .drive-label {
+        font-size: 0.8rem; /* 缩小字体 */
+      }
+
+      .file {
+        font-size: 10px; /* 缩小字体 */
+        height: 14px; /* 缩小高度 */
+        line-height: 14px; /* 调整行高 */
+      }
+    }
   </style>
 </head>
 <body>
